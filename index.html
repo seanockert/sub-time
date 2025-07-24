@@ -240,12 +240,14 @@
         padding: var(--size-base) var(--size-2x);
         position: relative;
         transition: transform 0.1s ease-in-out;
+        white-space: nowrap;
       }
 
       button svg {
-        width: 2.4rem;
+        flex: 0 0 auto;
         height: 2.4rem;
         margin: -2px 0;
+        width: 2.4rem;
       }
 
       button.primary {
@@ -296,7 +298,6 @@
         border: 1px solid var(--color-lighter);
         cursor: pointer;
         display: flex;
-        flex-wrap: wrap;
         justify-content: space-between;
         padding: var(--size-base) var(--size-2x);
       }
@@ -304,7 +305,7 @@
       #reservePlayers .player-item {
         border: none;
         border-bottom: 1px solid var(--color-lighter);
-        padding: 0 var(--size-2x);
+        padding: 0 var(--size-base);
       }
 
       .player-item > * {
@@ -332,6 +333,7 @@
 
       .player-name {
         font-weight: bold;
+        flex: 1;
       }
 
       .player-item input {
