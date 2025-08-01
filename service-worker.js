@@ -1,7 +1,8 @@
-const CACHE_NAME = 'subs-015';
+const CACHE_NAME = 'subtime-001';
 const urlsToCache = [
   '/',
   '/index.html',
+  '/script.js',
   '/icon.png',
   '/bion-bold.woff2',
 ];

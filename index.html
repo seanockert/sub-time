@@ -3,17 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Subs Timer</title>
+    <title>Sub Time!</title>
     <meta
       name="viewport"
       content="width=device-width, viewport-fit=cover, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
     />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta
-      name="apple-mobile-web-app-status-bar-style"
-      content="black-translucent"
-    />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="description" content="" />
     <link rel="apple-touch-icon" href="icon.png" />
     <link rel="shortcut icon" href="icon.png" />
@@ -26,8 +23,8 @@
       }
 
       @font-face {
-        font-family: "Bion Bold";
-        src: url("/bion-bold.woff2") format("woff2");
+        font-family: 'Bion Bold';
+        src: url('/bion-bold.woff2') format('woff2');
         font-weight: 700;
         font-style: normal;
       }
@@ -38,13 +35,12 @@
         --size-half: 0.375rem;
         --size-quarter: 0.1875rem;
         --size-2x: 1.5rem;
-        --size-3x: 2rem;
-        --size-4x: 3rem;
         --color-base: #161433;
-        --color-bg: #fefefe;
+        --color-disabled: #888888;
         --color-danger: #ff859e;
         --color-danger-secondary: #ffe1e8;
         --color-danger-alt: #530e1c;
+        --color-blackboard: #534747;
         --color-lighter: #ccc;
         --color-lightest: #eee;
         --color-purple-light: #e9e7ff;
@@ -52,7 +48,9 @@
         --color-subtle: #736f96;
         --color-success-secondary: #ecfecf;
         --color-success: #d7fc9b;
-        --color-success-alt: #213106;
+        --color-success-alt: #243704;
+        --safe-area-inset-top: env(safe-area-inset-top);
+        --safe-area-inset-bottom: env(safe-area-inset-bottom);
         --easing-overshoot: linear(
           0,
           -0.006 7.4%,
@@ -75,21 +73,21 @@
           1.007 91.9%,
           1
         );
-      }
-
-      body {
-        background-color: var(--color-bg);
+        background-color: var(--color-purple-lightest);
         background: linear-gradient(
           in oklch to bottom,
           var(--color-purple-lightest) 6rem,
           var(--color-purple-light) 16rem,
           var(--color-purple-lightest) 26rem
         );
-        background-size: 200% 200%;
+      }
+
+      body {
         color: var(--color-base);
-        font-family: "Bion Bold", sans-serif;
+        font-family: 'Bion Bold', sans-serif;
         font-size: 1.4rem;
         min-height: 100vh;
+        touch-action: manipulation;
       }
 
       .container {
@@ -98,7 +96,6 @@
         gap: var(--size-2x);
         margin: 0 auto;
         max-width: 40rem;
-        padding: var(--size-4x) 0;
         text-rendering: optimizeLegibility;
         text-wrap: balance;
       }
@@ -114,12 +111,18 @@
         gap: var(--size-half);
       }
 
+      .timers {
+        display: flex;
+        flex-direction: column;
+        padding: calc(var(--size-base) + var(--safe-area-inset-top)) var(--size-2x)
+          calc(var(--size-base) + var(--safe-area-inset-bottom)) var(--size-2x);
+      }
+
       .timer {
         font-size: 8rem;
         font-variant-numeric: tabular-nums;
         font-weight: bold;
-        line-height: 0.6em;
-        padding-top: var(--size-3x);
+        line-height: 100%;
         text-align: center;
       }
 
@@ -131,9 +134,23 @@
         font-size: 2rem;
         font-variant-numeric: tabular-nums;
         font-weight: bold;
-        line-height: 2rem;
+        line-height: 100%;
         text-align: center;
         color: var(--color-subtle);
+      }
+
+      .scrolled .timers {
+        background: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(4px);
+        flex-direction: row;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+
+      .scrolled .timer {
+        font-size: 2rem;
       }
 
       .substitutions {
@@ -143,6 +160,8 @@
         font-weight: bold;
         overflow: hidden;
         padding: var(--size-base) var(--size-2x);
+        user-select: none;
+        -webkit-user-select: none;
       }
 
       .substitutions.show {
@@ -164,9 +183,8 @@
         position: relative;
         opacity: 0;
         display: flex;
-        gap: var(--size-base);
+        gap: var(--size-2x);
         align-items: center;
-        justify-content: space-between;
       }
 
       .substitutions > .row svg {
@@ -180,10 +198,11 @@
       .substitutions .on {
         background: var(--color-success);
         color: var(--color-success-alt);
-        margin-left: -1.5rem;
-        z-index: 2;
-        transform-origin: left;
         flex-direction: row-reverse;
+        margin-left: -1.5rem;
+        text-align: right;
+        transform-origin: left;
+        z-index: 2;
       }
 
       .substitutions > .on svg {
@@ -197,7 +216,6 @@
         color: var(--color-danger-alt);
         margin-right: -1.5rem;
         transform-origin: right;
-        text-align: right;
       }
 
       .substitutions > .off svg {
@@ -241,6 +259,8 @@
         position: relative;
         transition: transform 0.1s ease-in-out;
         white-space: nowrap;
+        user-select: none;
+        -webkit-user-select: none;
       }
 
       button svg {
@@ -295,17 +315,51 @@
 
       .player-item {
         align-items: center;
-        border: 1px solid var(--color-lighter);
         cursor: pointer;
         display: flex;
         justify-content: space-between;
+        max-width: 100%;
         padding: var(--size-base) var(--size-2x);
+        touch-action: pan-y;
       }
 
       #reservePlayers .player-item {
-        border: none;
-        border-bottom: 1px solid var(--color-lighter);
-        padding: 0 var(--size-base);
+        padding: 0;
+        position: relative;
+        user-select: none;
+        -webkit-user-select: none;
+        transition: transform 0.2s;
+      }
+
+      #reservePlayers .player-content {
+        align-items: center;
+        background: var(--color-purple-lightest);
+        display: flex;
+        justify-content: space-between;
+        padding: 0 var(--size-2x);
+        position: relative;
+        width: 100%;
+        z-index: 2;
+      }
+
+      .player-item.excluded .player-content {
+        background: var(--color-lightest);
+      }
+
+      .player-item.excluded .player-content * {
+        color: var(--color-disabled);
+      }
+
+      .player-item.excluded .player-name input {
+        text-decoration: line-through;
+      }
+
+      .player-item.excluded .player-name input:focus {
+        text-decoration: none;
+      }
+
+      .player-item.excluded .swipe-left {
+        background: var(--color-success-alt);
       }
 
       .player-item > * {
@@ -331,19 +385,57 @@
         margin-right: calc(var(--size-base) * -1);
       }
 
+      .player-item.swiping {
+        transition: none;
+      }
+
+      .player-item .swipe-hint {
+        align-items: center;
+        background: var(--color-blackboard);
+        bottom: 0;
+        color: var(--color-lightest);
+        display: flex;
+        opacity: 1;
+        padding: var(--size-base);
+        position: absolute;
+        top: 0;
+        width: 50%;
+        z-index: 1;
+      }
+
+      .player-item .swipe-hint svg {
+        height: 1.5rem;
+        width: 1.5rem;
+      }
+
+      .player-item .swipe-left {
+        background: var(--color-danger-alt);
+        justify-content: flex-end;
+        right: 0;
+      }
+
+      .player-item .swipe-right {
+        left: 0;
+        justify-content: flex-start;
+      }
+
       .player-name {
         font-weight: bold;
         flex: 1;
+        user-select: none;
+        -webkit-user-select: none;
       }
 
       .player-item input {
-        --webkit-appearance: none;
         all: unset;
         color: inherit;
         field-sizing: content;
         font: inherit;
-        min-width: 3rem;
+        min-width: 12ch;
         padding: 1.25rem var(--size-base);
+        width: 0;
+        --webkit-appearance: none;
+        -webkit-tap-highlight-color: transparent;
       }
 
       .player-time {
@@ -356,6 +448,16 @@
         display: flex;
         align-items: center;
         gap: var(--size-half);
+      }
+
+      .settings {
+        padding: var(--size-2x) var(--size-base);
+        background: var(--color-blackboard);
+        color: var(--color-lightest);
+      }
+
+      .settings .button.secondary {
+        color: var(--color-lightest);
       }
 
       @keyframes pulse {
@@ -402,10 +504,12 @@
     </style>
   </head>
   <body>
-    <main class="container">
+    <div class="timers">
       <div class="timer" id="timer">4:00</div>
       <div class="game-timer" id="gameTimer">40:00</div>
+    </div>
 
+    <main class="container">
       <section class="substitutions" id="substitutionPreview">
         <header class="section-title">Next subs...</header>
         <div class="row on">
@@ -429,16 +533,8 @@
       </section>
 
       <section class="block">
-        <button id="startBtn" class="button primary" onclick="toggleGame()">
-          Start Game
-        </button>
-        <button
-          id="resetRoundBtn"
-          class="button secondary"
-          onclick="resetRound()"
-        >
-          Reset Round
-        </button>
+        <button id="startBtn" class="button primary" onclick="toggleGame()">Start Game</button>
+        <button id="resetRoundBtn" class="button secondary" onclick="resetRound()">Reset Round</button>
       </section>
 
       <section class="player-section">
@@ -447,693 +543,27 @@
       </section>
 
       <section class="player-section">
-        <h2 class="section-title">
-          <span id="reserveCount">9</span> in reserve
-        </h2>
+        <h2 class="section-title"><span id="reserveCount">9</span> in reserve</h2>
         <ul class="player-list" id="reservePlayers"></ul>
       </section>
 
-      <section class="block">
-        <h2 class="section-title">Settings</h2>
+      <section class="block settings">
+        <div class="inline"><button id="gameTimeLimit" onclick="updateGameTimeLimit()">40</button>min game</div>
+
+        <div class="inline"><button id="roundTime" onclick="updateRoundTime()">4</button>mins per round</div>
 
         <div class="inline">
-          <button id="gameTimeLimit" onclick="updateGameTimeLimit()">40</button
-          >min game
+          <button id="substitutionCount" onclick="updateSubstitutionCount()">2</button>subs per round
         </div>
 
-        <div class="inline">
-          <button id="roundTime" onclick="updateRoundTime()">4</button>mins per
-          round
-        </div>
-
-        <div class="inline">
-          <button id="substitutionCount" onclick="updateSubstitutionCount()">
-            2</button
-          >subs per round
-        </div>
-
-        <button class="button secondary" id="resetBtn" onclick="resetGame()">
-          Reset Game
-        </button>
+        <button class="button secondary" id="resetBtn" onclick="resetGame()">Reset Game</button>
       </section>
     </main>
 
+    <script src="script.js"></script>
     <script>
-      // Constants
-      const DEFAULT_ROUND_TIME = 240;
-      const DEFAULT_GAME_TIME = 2400;
-      const SUB_NOTIFICATION_THRESHOLD = 5;
-      const MAX_ACTIVE_PLAYERS = 5;
-      const ROUND_TIME_OPTIONS = [180, 240, 300];
-      const GAME_TIME_OPTIONS = [20, 25, 30, 35, 40, 45, 50, 55, 60];
-
-      // Game state
-      let roundTime = DEFAULT_ROUND_TIME;
-      let gameTimeLimit = DEFAULT_GAME_TIME;
-      let gameActive = false;
-      let paused = false;
-      let timeLeft = roundTime;
-      let timerInterval;
-      let gameTime = 0;
-      let substitutionCount = 2;
-      let notificationSent = false;
-      let substitutionDelayTimer = null;
-      let shouldDelaySubstitutionUpdate = false;
-
-      // DOM elements
-      const elements = {
-        timer: document.getElementById("timer"),
-        gameTimer: document.getElementById("gameTimer"),
-        substitutionPreview: document.getElementById("substitutionPreview"),
-        onRow: document.getElementById("onRow"),
-        offRow: document.getElementById("offRow"),
-        startBtn: document.getElementById("startBtn"),
-        resetRoundBtn: document.getElementById("resetRoundBtn"),
-        resetBtn: document.getElementById("resetBtn"),
-        activeCount: document.getElementById("activeCount"),
-        reserveCount: document.getElementById("reserveCount"),
-        activePlayers: document.getElementById("activePlayers"),
-        reservePlayers: document.getElementById("reservePlayers"),
-        substitutionCount: document.getElementById("substitutionCount"),
-        roundTime: document.getElementById("roundTime"),
-        gameTimeLimit: document.getElementById("gameTimeLimit"),
-      };
-
-      const defaultPlayerNames = [
-        "Alfie",
-        "Amos",
-        "Asher",
-        "Bentis",
-        "Elias",
-        "Mattia",
-        "Ollie",
-        "Solly",
-        "William",
-      ];
-
-      let playerNames = [];
-
-      let allPlayers = [];
-      let selectedForSubstitution = { playersIn: [], playersOut: [] };
-      let nextSubstitution = { playersIn: [], playersOut: [] };
-
-      function loadPlayerNames() {
-        const savedNames = localStorage.getItem("subsPlayerNames");
-        if (savedNames) {
-          try {
-            playerNames = JSON.parse(savedNames);
-          } catch (error) {
-            playerNames = [...defaultPlayerNames];
-          }
-        } else {
-          playerNames = [...defaultPlayerNames];
-        }
-      }
-
-      function savePlayerNames() {
-        try {
-          localStorage.setItem("subsPlayerNames", JSON.stringify(playerNames));
-        } catch (error) {
-          console.error("Error saving player names to localStorage:", error);
-        }
-      }
-
-      function initPlayers() {
-        allPlayers = playerNames.map((name, index) => ({
-          name,
-          id: index + 1,
-          playTime: 0,
-          isActive: false,
-          lastSubTime: 0,
-          sitOutRounds: 0,
-          justSubbed: false,
-        }));
-      }
-
-      function requestNotificationPermission() {
-        if ("Notification" in window && Notification.permission === "default") {
-          Notification.requestPermission().catch(console.error);
-        }
-      }
-
-      function sendNotification(playersIn, playersOut) {
-        if (
-          !("Notification" in window) ||
-          Notification.permission !== "granted"
-        ) {
-          return;
-        }
-
-        try {
-          const onPlayers = playersIn.map((p) => p.name).join(", ");
-          const offPlayers = playersOut.map((p) => p.name).join(", ");
-
-          const notification = new Notification("Sub in 10 seconds!", {
-            body: `ON: ${onPlayers}\nOFF: ${offPlayers}`,
-            tag: "substitution",
-            requireInteraction: true,
-            silent: false,
-            icon: "/icon.png",
-          });
-
-          notification.onclick = () => {
-            window.focus();
-            notification.close();
-          };
-        } catch (error) {
-          console.error("Error creating notification:", error);
-        }
-      }
-
-      function calculateSubstitution() {
-        const activePlayers = [];
-        const availableReserves = [];
-
-        for (const p of allPlayers) {
-          if (p.isActive) {
-            activePlayers.push(p);
-          } else if (p.sitOutRounds === 0) {
-            availableReserves.push(p);
-          }
-        }
-        const totalGameMinutes = gameTime / 60;
-        const targetPlayTime = (totalGameMinutes * 5) / allPlayers.length;
-
-        const mustSubOut = activePlayers.filter(
-          (p) => gameTime - p.lastSubTime >= roundTime * 3
-        );
-
-        const shouldSubOut = activePlayers
-          .filter((p) => !mustSubOut.includes(p))
-          .sort((a, b) => {
-            const playTimeDiff = b.playTime - a.playTime;
-            const threshold = Math.max(15, roundTime / 4);
-            if (Math.abs(playTimeDiff) > threshold) return playTimeDiff;
-            return gameTime - b.lastSubTime - (gameTime - a.lastSubTime);
-          });
-
-        const availableByPriority = availableReserves.sort((a, b) => {
-          const aUnderTarget = Math.max(0, targetPlayTime * 60 - a.playTime);
-          const bUnderTarget = Math.max(0, targetPlayTime * 60 - b.playTime);
-          const fairnessThreshold = Math.max(30, roundTime / 2);
-          if (Math.abs(aUnderTarget - bUnderTarget) > fairnessThreshold) {
-            return bUnderTarget - aUnderTarget;
-          }
-
-          const playTimeDiff = a.playTime - b.playTime;
-          const playTimeThreshold = Math.max(10, roundTime / 4);
-          if (Math.abs(playTimeDiff) > playTimeThreshold) return playTimeDiff;
-
-          return gameTime - b.lastSubTime - (gameTime - a.lastSubTime);
-        });
-
-        const maxSubs = Math.min(substitutionCount, availableByPriority.length);
-        const minRequiredSubs = mustSubOut.length;
-        let actualSubCount = Math.max(
-          minRequiredSubs,
-          Math.min(maxSubs, activePlayers.length)
-        );
-
-        if (
-          actualSubCount === 0 &&
-          activePlayers.length > 0 &&
-          availableByPriority.length > 0
-        ) {
-          actualSubCount = 1;
-        }
-
-        const playersOut = [
-          ...mustSubOut.slice(0, actualSubCount),
-          ...shouldSubOut.slice(
-            0,
-            Math.max(0, actualSubCount - mustSubOut.length)
-          ),
-        ];
-
-        const playersIn = availableByPriority.slice(0, actualSubCount);
-
-        return { playersIn, playersOut };
-      }
-
-      function updateSubstitutionCalculation() {
-        if (!gameActive || shouldDelaySubstitutionUpdate) return;
-
-        const newSubstitution = calculateSubstitution();
-
-        // More efficient change detection
-        const hasChanged =
-          newSubstitution.playersIn.length !==
-            nextSubstitution.playersIn.length ||
-          newSubstitution.playersOut.length !==
-            nextSubstitution.playersOut.length ||
-          newSubstitution.playersIn.some(
-            (p, i) => p.id !== nextSubstitution.playersIn[i]?.id
-          ) ||
-          newSubstitution.playersOut.some(
-            (p, i) => p.id !== nextSubstitution.playersOut[i]?.id
-          );
-
-        if (hasChanged) {
-          nextSubstitution = newSubstitution;
-          updateSubstitutionDOM();
-        }
-
-        // Update warning state independently
-        if (timeLeft <= SUB_NOTIFICATION_THRESHOLD) {
-          elements.substitutionPreview.classList.add("warning");
-        } else {
-          elements.substitutionPreview.classList.remove("warning");
-        }
-
-        if (timeLeft === SUB_NOTIFICATION_THRESHOLD && !notificationSent) {
-          sendNotification(
-            nextSubstitution.playersIn,
-            nextSubstitution.playersOut
-          );
-          notificationSent = true;
-        }
-      }
-
-      function updateSubstitutionDOM() {
-        if (!gameActive) {
-          elements.substitutionPreview.classList.remove("show");
-          return;
-        }
-
-        elements.onRow.innerHTML = nextSubstitution.playersIn
-          .map((p) => p.name)
-          .join(", ");
-        elements.offRow.innerHTML = nextSubstitution.playersOut
-          .map((p) => p.name)
-          .join(", ");
-
-        const wasVisible =
-          elements.substitutionPreview.classList.contains("show");
-
-        if (wasVisible) {
-          elements.substitutionPreview.classList.remove("show");
-          setTimeout(
-            () => elements.substitutionPreview.classList.add("show"),
-            10
-          );
-        } else {
-          elements.substitutionPreview.classList.add("show");
-        }
-      }
-
-      function updateSubstitutionDisplay() {
-        updateSubstitutionCalculation();
-      }
-
-      function updateSubstitutionCount() {
-        substitutionCount = substitutionCount === 4 ? 1 : substitutionCount + 1;
-        elements.substitutionCount.textContent = substitutionCount;
-        updateSubstitutionDisplay();
-      }
-
-      function updateRoundTime() {
-        const currentIndex = ROUND_TIME_OPTIONS.indexOf(roundTime);
-        const nextIndex = (currentIndex + 1) % ROUND_TIME_OPTIONS.length;
-        roundTime = ROUND_TIME_OPTIONS[nextIndex];
-        timeLeft = roundTime;
-        elements.roundTime.textContent = roundTime / 60;
-        updateDisplay();
-        updateTimer();
-        updateSubstitutionDisplay();
-      }
-
-      function updateGameTimeLimit() {
-        const currentMinutes = gameTimeLimit / 60;
-        const currentIndex = GAME_TIME_OPTIONS.indexOf(currentMinutes);
-        const nextIndex = (currentIndex + 1) % GAME_TIME_OPTIONS.length;
-        const nextMinutes = GAME_TIME_OPTIONS[nextIndex];
-        gameTimeLimit = nextMinutes * 60;
-        elements.gameTimeLimit.textContent = nextMinutes;
-        updateGameTimer();
-      }
-
-      function cycleSitOutRounds(playerId) {
-        const player = allPlayers.find((p) => p.id === playerId);
-        if (player && !player.isActive) {
-          player.sitOutRounds = (player.sitOutRounds + 1) % 5;
-          updateDisplay();
-          updateSubstitutionDisplay();
-        }
-      }
-
-      function decrementSitOutRounds() {
-        allPlayers.forEach((player) => {
-          if (player.sitOutRounds > 0) player.sitOutRounds--;
-        });
-      }
-
-      function createPlayerElement(player, isActive) {
-        const div = document.createElement("li");
-        div.className = `player-item${isActive ? " active" : ""}${
-          player.justSubbed ? " subbed" : ""
-        }`;
-
-        if (isActive) {
-          div.innerHTML = `
-            <span class="player-name">${player.name}</span>
-            <span class="player-time">${formatTime(player.playTime)}</span>
-          `;
-          div.onclick = () => selectPlayer(player, "active");
-        } else {
-          div.innerHTML = `
-            <div class="player-name">
-              <input type="text" 
-                     value="${player.name}" 
-                     class="player-name-input"
-                     data-player-id="${player.id}"
-                     onclick="event.stopPropagation()"
-                     onblur="updatePlayerName(${player.id}, this.value)">
-            </div>
-            <div>
-              <span class="player-time">${formatTime(player.playTime)}</span>
-              <button class="button secondary button-small button-sit-out ${
-                player.sitOutRounds > 0 ? "active" : ""
-              }"
-                      onclick="cycleSitOutRounds(${player.id})">
-                Sit ${Math.round(
-                  player.sitOutRounds > 0
-                    ? (player.sitOutRounds * roundTime) / 60
-                    : 0
-                )}m
-              </button>
-            </div>
-          `;
-          div.onclick = (e) => {
-            if (
-              !e.target.classList.contains("button-sit-out") &&
-              !e.target.classList.contains("player-name-input")
-            ) {
-              selectPlayer(player, "reserve");
-            }
-          };
-        }
-
-        return div;
-      }
-
-      function updateDisplay() {
-        const activePlayers = [];
-        const reservePlayers = [];
-
-        for (const player of allPlayers) {
-          if (player.isActive) {
-            activePlayers.push(player);
-          } else {
-            reservePlayers.push(player);
-          }
-        }
-
-        elements.activeCount.textContent = activePlayers.length;
-        elements.reserveCount.textContent = reservePlayers.length;
-
-        elements.activePlayers.innerHTML = "";
-        for (const player of activePlayers) {
-          elements.activePlayers.appendChild(createPlayerElement(player, true));
-        }
-
-        elements.reservePlayers.innerHTML = "";
-        for (const player of reservePlayers) {
-          elements.reservePlayers.appendChild(
-            createPlayerElement(player, false)
-          );
-        }
-      }
-
-      function selectPlayer(player, type) {
-        if (gameActive && !paused) return;
-
-        if (!gameActive) {
-          let activeCount = 0;
-          for (const p of allPlayers) {
-            if (p.isActive) activeCount++;
-          }
-
-          if (type === "reserve" && activeCount < MAX_ACTIVE_PLAYERS) {
-            player.isActive = true;
-          } else if (type === "active") {
-            player.isActive = false;
-          }
-          updateDisplay();
-          updateGameStatus();
-        }
-      }
-
-      function updateGameStatus() {
-        if (!gameActive) {
-          elements.startBtn.innerHTML =
-            '<svg fill="currentColor" viewBox="0 0 24 24"><path d="M19.3 13.5a2 2 0 0 0 0-3c-3-2.3-6.4-4.2-10-5.4l-.6-.3A2 2 0 0 0 6 6.5c-.5 3.6-.5 7.4 0 11a2 2 0 0 0 2.7 1.7l.6-.3c3.6-1.2 7-3 10-5.4Z" clip-rule="evenodd"/></svg>Start Game';
-        } else if (paused) {
-          elements.startBtn.innerHTML =
-            '<svg fill="currentColor" viewBox="0 0 24 24"><path d="M19.3 13.5a2 2 0 0 0 0-3c-3-2.3-6.4-4.2-10-5.4l-.6-.3A2 2 0 0 0 6 6.5c-.5 3.6-.5 7.4 0 11a2 2 0 0 0 2.7 1.7l.6-.3c3.6-1.2 7-3 10-5.4Z" clip-rule="evenodd"/></svg>Resume';
-        } else {
-          elements.startBtn.innerHTML =
-            '<svg fill="currentColor" viewBox="0 0 24 24"><path d="M17.3 5.5c.4.1.7.5.7 1v11c0 .5-.3.9-.7 1-.8.3-1.8.3-2.6 0-.4-.1-.7-.5-.7-1v-11c0-.5.3-.9.7-1 .8-.3 1.8-.3 2.6 0Zm-8 0c.4.1.7.5.7 1v11c0 .5-.3.9-.7 1-.8.3-1.8.3-2.6 0-.4-.1-.7-.5-.7-1v-11c0-.5.3-.9.7-1 .8-.3 1.8-.3 2.6 0Z" clip-rule="evenodd"/></svg>Pause';
-        }
-      }
-
-      function formatTime(seconds) {
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${mins}:${secs.toString().padStart(2, "0")}`;
-      }
-
-      function updatePlayTime() {
-        allPlayers.forEach((player) => {
-          if (player.isActive) player.playTime++;
-        });
-      }
-
-      function updateTimer() {
-        elements.timer.textContent = formatTime(timeLeft);
-        elements.timer.classList.toggle("warning", timeLeft <= 30);
-      }
-
-      function updateGameTimer() {
-        const timeElapsed = gameTimeLimit - gameTime;
-        elements.gameTimer.textContent = formatTime(Math.max(0, timeElapsed));
-      }
-
-      function updatePlayerTimes() {
-        const activePlayers = allPlayers.filter((p) => p.isActive);
-        const reservePlayers = allPlayers.filter((p) => !p.isActive);
-
-        // Update active players
-        const activeElements = elements.activePlayers.children;
-        for (let i = 0; i < activeElements.length; i++) {
-          const timeElement = activeElements[i].querySelector(".player-time");
-          if (timeElement && activePlayers[i]) {
-            timeElement.textContent = formatTime(activePlayers[i].playTime);
-          }
-        }
-
-        // Update reserve players
-        const reserveElements = elements.reservePlayers.children;
-        for (let i = 0; i < reserveElements.length; i++) {
-          const timeElement = reserveElements[i].querySelector(".player-time");
-          if (timeElement && reservePlayers[i]) {
-            timeElement.textContent = formatTime(reservePlayers[i].playTime);
-          }
-        }
-      }
-
-      function startTimer() {
-        timerInterval = setInterval(() => {
-          if (!paused) {
-            timeLeft--;
-            gameTime++;
-
-            updatePlayTime();
-            updateTimer();
-            updateGameTimer();
-            updatePlayerTimes();
-
-            // Only update display every minute to reduce DOM manipulation
-            if (timeLeft % 60 === 0) updateDisplay();
-
-            updateSubstitutionCalculation();
-
-            if (gameTime >= gameTimeLimit) {
-              paused = true;
-              updateGameStatus();
-              return;
-            }
-
-            if (timeLeft <= 0) handleSubstitution();
-          }
-        }, 1000);
-      }
-
-      function toggleGame() {
-        if (!gameActive) {
-          startGame();
-        } else {
-          togglePause();
-        }
-      }
-
-      function startGame() {
-        let activeCount = 0;
-        for (const p of allPlayers) {
-          if (p.isActive) activeCount++;
-        }
-
-        if (activeCount < 1) {
-          // Auto-fill with random players up to MAX_ACTIVE_PLAYERS
-          const availablePlayers = allPlayers.filter(
-            (p) => p.sitOutRounds === 0
-          );
-          const playersToActivate = Math.min(
-            MAX_ACTIVE_PLAYERS,
-            availablePlayers.length
-          );
-
-          // Shuffle and select random players
-          const shuffled = [...availablePlayers].sort(
-            () => Math.random() - 0.5
-          );
-          for (let i = 0; i < playersToActivate; i++) {
-            shuffled[i].isActive = true;
-          }
-
-          updateDisplay();
-        }
-
-        requestNotificationPermission();
-
-        gameActive = true;
-        paused = false;
-        notificationSent = false;
-
-        playSound();
-        startTimer();
-        updateGameStatus();
-        updateSubstitutionDisplay();
-      }
-
-      function togglePause() {
-        paused = !paused;
-        updateGameStatus();
-      }
-
-      function resetRound() {
-        if (!gameActive) return;
-
-        const currentRoundTime = roundTime - timeLeft;
-        allPlayers.forEach((player) => {
-          if (player.isActive) {
-            player.playTime = Math.max(0, player.playTime - currentRoundTime);
-          }
-        });
-
-        timeLeft = roundTime;
-        notificationSent = false;
-
-        updateTimer();
-        updateGameTimer();
-        updateDisplay();
-        updateSubstitutionDisplay();
-      }
-
-      function resetGame() {
-        gameActive = false;
-        paused = false;
-        timeLeft = roundTime;
-        gameTime = 0;
-        notificationSent = false;
-        elements.substitutionPreview.classList.remove("show");
-
-        clearInterval(timerInterval);
-
-        initPlayers();
-        updateTimer();
-        updateGameTimer();
-        updateDisplay();
-        updateGameStatus();
-        updateSubstitutionDisplay();
-      }
-
-      function handleSubstitution() {
-        clearInterval(timerInterval);
-        playSound();
-
-        allPlayers.forEach((player) => (player.justSubbed = false));
-
-        nextSubstitution.playersOut.forEach((player) => {
-          player.isActive = false;
-          player.justSubbed = true;
-        });
-
-        nextSubstitution.playersIn.forEach((player) => {
-          player.isActive = true;
-          player.lastSubTime = gameTime;
-        });
-
-        decrementSitOutRounds();
-
-        timeLeft = roundTime;
-        notificationSent = false;
-        updateTimer();
-        updateDisplay();
-
-        shouldDelaySubstitutionUpdate = true;
-        if (substitutionDelayTimer) clearTimeout(substitutionDelayTimer);
-
-        substitutionDelayTimer = setTimeout(() => {
-          shouldDelaySubstitutionUpdate = false;
-          updateSubstitutionDisplay();
-        }, SUB_NOTIFICATION_THRESHOLD * 1000);
-
-        startTimer();
-      }
-
-      function updatePlayerName(playerId, newName) {
-        const player = allPlayers.find((p) => p.id === playerId);
-        if (player && newName.trim()) {
-          player.name = newName.trim();
-          // Update the playerNames array to keep it in sync
-          const playerIndex = playerId - 1;
-          if (playerIndex >= 0 && playerIndex < playerNames.length) {
-            playerNames[playerIndex] = player.name;
-            savePlayerNames();
-          }
-        }
-      }
-
-      function playSound() {
-        // prettier-ignore
-        zzfx(undefined, undefined, 438, 0.06, 0.28, 0.19, 1, 0.4, -2, undefined, undefined, undefined, 0.01, undefined, undefined, undefined, undefined, 0.6, 0.25, 0.37, -1452);
-      }
-
-      loadPlayerNames();
-      initPlayers();
-      updateDisplay();
-      updateGameStatus();
-      updateTimer();
-      updateGameTimer();
-      updateSubstitutionDisplay();
-
-      // Sound effects
-      // prettier-ignore
-      let zzfxV=1, zzfxX=new AudioContext, zzfx= (p=1,k=.05,b=220,e=0,r=0,t=.1,q=0,D=1,u=0,y=0,v=0,z=0,l=0,E=0,A=0,F=0,c=0,w=1,m=0,B=0
-,N=0)=>{let M=Math,d=2*M.PI,R=44100,G=u*=500*d/R/R,C=b*=(1-k+2*k*M.random(k=[]))*d/R,
-g=0,H=0,a=0,n=1,I=0,J=0,f=0,h=N<0?-1:1,x=d*h*N*2/R,L=M.cos(x),Z=M.sin,K=Z(x)/4,O=1+K,
-X=-2*L/O,Y=(1-K)/O,P=(1+h*L)/2/O,Q=-(h+L)/O,S=P,T=0,U=0,V=0,W=0;e=R*e+9;m*=R;r*=R;t*=
-R;c*=R;y*=500*d/R**3;A*=d/R;v*=d/R;z*=R;l=R*l|0;p*=zzfxV;for(h=e+m+r+t+c|0;a<h;k[a++]
-=f*p)++J%(100*F|0)||(f=q?1<q?2<q?3<q?Z(g**3):M.max(M.min(M.tan(g),1),-1):1-(2*g/d%2+2)
-%2:1-4*M.abs(M.round(g/d)-g/d):Z(g),f=(l?1-B+B*Z(d*a/l):1)*(f<0?-1:1)*M.abs(f)**D*(a<
-e?a/e:a<e+m?1-(a-e)/m*(1-w):a<e+m+r?w:a<h-c?(h-a-c)/t*w:0),f=c?f/2+(c>a?0:(a<h-c?1:(h
--a)/c)*k[a-c|0]/2/p):f,N?f=W=S*T+Q*(T=U)+P*(U=f)-Y*V-X*(V=W):0),x=(b+=u+=y)*M.cos(A*
-H++),g+=x+x*E*Z(a**5),n&&++n>z&&(b+=v,C+=v,n=0),!l||++I%l||(b=C,u=G,n=n||1);p=zzfxX.
-createBuffer(1,h,R);p.getChannelData(0).set(k);b=zzfxX.createBufferSource();
-b.buffer=p;b.connect(zzfxX.destination);b.start()}
-
-      if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("/service-worker.js");
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js');
       }
     </script>
   </body>
