@@ -10,7 +10,10 @@
     />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
     <meta name="description" content="" />
     <link rel="apple-touch-icon" href="icon.png" />
     <link rel="shortcut icon" href="icon.png" />
@@ -23,8 +26,8 @@
       }
 
       @font-face {
-        font-family: 'Bion Bold';
-        src: url('/bion-bold.woff2') format('woff2');
+        font-family: "Bion Bold";
+        src: url("/bion-bold.woff2") format("woff2");
         font-weight: 700;
         font-style: normal;
       }
@@ -82,12 +85,36 @@
         );
       }
 
+      html {
+        scrollbar-width: none;
+        overscroll-behavior: none;
+        background-color: var(--color-purple-lightest);
+        background: linear-gradient(
+          in oklch to bottom,
+          var(--color-purple-lightest) 6rem,
+          var(--color-purple-light) 16rem,
+          var(--color-purple-lightest) 26rem
+        );
+      }
+
       body {
         color: var(--color-base);
-        font-family: 'Bion Bold', sans-serif;
+        font-family: "Bion Bold", sans-serif;
         font-size: 1.4rem;
+        overflow-x: hidden;
         min-height: 100vh;
         touch-action: manipulation;
+        background-color: var(--color-purple-lightest);
+        background: linear-gradient(
+          in oklch to bottom,
+          var(--color-purple-lightest) 6rem,
+          var(--color-purple-light) 16rem,
+          var(--color-purple-lightest) 26rem
+        );
+      }
+
+      ::-webkit-scrollbar {
+        display: none;
       }
 
       .container {
@@ -114,8 +141,9 @@
       .timers {
         display: flex;
         flex-direction: column;
-        padding: calc(var(--size-base) + var(--safe-area-inset-top)) var(--size-2x)
-          calc(var(--size-base) + var(--safe-area-inset-bottom)) var(--size-2x);
+        padding: calc(var(--size-base) + var(--safe-area-inset-top))
+          var(--size-2x) calc(var(--size-base) + var(--safe-area-inset-bottom))
+          var(--size-2x);
       }
 
       .timer {
@@ -146,7 +174,7 @@
         justify-content: space-between;
         position: sticky;
         top: 0;
-        z-index: 2;
+        z-index: 11;
       }
 
       .scrolled .timer {
@@ -311,6 +339,7 @@
       .player-list {
         display: flex;
         flex-direction: column;
+        overflow: hidden;
       }
 
       .player-item {
@@ -336,7 +365,7 @@
         background: var(--color-purple-lightest);
         display: flex;
         justify-content: space-between;
-        padding: 0 var(--size-2x);
+        padding: 0 var(--size-base);
         position: relative;
         width: 100%;
         z-index: 2;
@@ -373,12 +402,10 @@
 
       .player-item.active {
         background: var(--color-success-secondary);
-        border-color: var(--color-success-secondary);
       }
 
       .player-item.subbed {
         background: var(--color-danger-secondary);
-        border-color: var(--color-danger-secondary) !important;
       }
 
       .player-item .button {
@@ -533,8 +560,16 @@
       </section>
 
       <section class="block">
-        <button id="startBtn" class="button primary" onclick="toggleGame()">Start Game</button>
-        <button id="resetRoundBtn" class="button secondary" onclick="resetRound()">Reset Round</button>
+        <button id="startBtn" class="button primary" onclick="toggleGame()">
+          Start Game
+        </button>
+        <button
+          id="resetRoundBtn"
+          class="button secondary"
+          onclick="resetRound()"
+        >
+          Reset Round
+        </button>
       </section>
 
       <section class="player-section">
@@ -543,27 +578,39 @@
       </section>
 
       <section class="player-section">
-        <h2 class="section-title"><span id="reserveCount">9</span> in reserve</h2>
+        <h2 class="section-title">
+          <span id="reserveCount">9</span> in reserve
+        </h2>
         <ul class="player-list" id="reservePlayers"></ul>
       </section>
 
       <section class="block settings">
-        <div class="inline"><button id="gameTimeLimit" onclick="updateGameTimeLimit()">40</button>min game</div>
-
-        <div class="inline"><button id="roundTime" onclick="updateRoundTime()">4</button>mins per round</div>
-
         <div class="inline">
-          <button id="substitutionCount" onclick="updateSubstitutionCount()">2</button>subs per round
+          <button id="gameTimeLimit" onclick="updateGameTimeLimit()">40</button
+          >min game
         </div>
 
-        <button class="button secondary" id="resetBtn" onclick="resetGame()">Reset Game</button>
+        <div class="inline">
+          <button id="roundTime" onclick="updateRoundTime()">4</button>mins per
+          round
+        </div>
+
+        <div class="inline">
+          <button id="substitutionCount" onclick="updateSubstitutionCount()">
+            2</button
+          >subs per round
+        </div>
+
+        <button class="button secondary" id="resetBtn" onclick="resetGame()">
+          Reset Game
+        </button>
       </section>
     </main>
 
     <script src="script.js"></script>
     <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/service-worker.js');
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/service-worker.js");
       }
     </script>
   </body>

@@ -373,6 +373,16 @@ function createPlayerElement(player, isActive) {
     const playerContent = div.querySelector('.player-content');
     const input = div.querySelector('.player-name-input');
 
+    input.addEventListener('focus', () => {
+      document.body.style.overflowX = 'hidden';
+      document.body.style.touchAction = 'pan-y';
+    });
+    
+    input.addEventListener('blur', () => {
+      document.body.style.overflowX = '';
+      document.body.style.touchAction = '';
+    });
+
     setupSwipeControls(div, player, input);
     div.onclick = () => selectPlayer(player, 'reserve');
   }
@@ -710,7 +720,6 @@ function setupSwipeControls(item, player, input) {
       return;
     }
 
-    // Prevent page scrolling during horizontal swipe
     e.preventDefault();
 
     currentX = deltaX;
