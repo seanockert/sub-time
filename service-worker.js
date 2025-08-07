@@ -1,11 +1,14 @@
-const CACHE_NAME = 'subtime-010';
+const CACHE_NAME = 'subtime-011';
 const urlsToCache = [
   '/',
   '/index.html',
   '/script.js',
   '/icon.png',
   '/bion-bold.woff2',
-  '/subs.mp3',
+  '/sounds/sub1.mp3',
+  '/sounds/sub2.mp3',
+  '/sounds/sub3.mp3',
+  '/sounds/sub4.mp3',
 ];
 
 self.addEventListener('install', (event) => {

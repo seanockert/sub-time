@@ -267,6 +267,30 @@
         text-align: center;
       }
 
+      .board {
+        max-width: 30rem;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        transform: translate3d(0, -30%, 0) rotate(1deg);
+      }
+
+      .board > img {
+        width: 100%;
+        height: auto;
+      }
+
+      .board > div {
+        background: var(--color-blackboard);
+        border-radius: 0 0 3rem 3rem;
+        padding: var(--size-base);
+        border: 1.9rem solid #f1ece5;
+        border-top: none;
+        color: #f1ece5;
+        min-height: 10rem;
+        font-size: 2rem;
+      }
+
       button {
         -webkit-tap-highlight-color: transparent;
         align-items: center;
@@ -531,6 +555,13 @@
     </style>
   </head>
   <body>
+    <!-- <div class="board">
+      <img src="board-1.png" />
+      <div class="inline">
+        <div>Player On</div>
+        <div>Player Off</div>
+      </div>
+    </div> -->
     <div class="timers">
       <div class="timer" id="timer">4:00</div>
       <div class="game-timer" id="gameTimer">40:00</div>
